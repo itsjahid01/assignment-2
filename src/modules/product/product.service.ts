@@ -29,10 +29,15 @@ const deleteProduct = async (id: any) => {
   return result;
 };
 
+// const searchProducts = (searchTerm: string) => {
+//
+// };
+
 export const productServices = {
   createProductToDb,
   getAllProducts,
   getAProduct,
   updateProductById,
   deleteProduct,
+  //   searchProducts,
 };

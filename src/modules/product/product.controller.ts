@@ -24,7 +24,7 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// getAllProduct-------------------
+// searchTerm or getAllProduct-------------------
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const result = await productServices.getAllProducts();
@@ -110,10 +110,31 @@ const deleteProducts = async (req: Request, res: Response) => {
   }
 };
 
+// // search a Product-------------------
+// const searchProducts = async (req: Request, res: Response) => {
+//   try {
+//     const searchTerm = req.query.searchTerm;
+//     const result = await productServices.searchProducts(searchTerm as string);
+
+//     res.status(200).send({
+//       success: true,
+//       message: `Products matching search term ${searchTerm} fetched successfully!`,
+//       data: null,
+//     });
+//   } catch (error: any) {
+//     res.status(400).send({
+//       success: false,
+//       message: error.message || "Something went wrong",
+//       error: error,
+//     });
+//   }
+// };
+
 export const productController = {
   createProduct,
   getAllProducts,
   getProductById,
   updateProduct,
   deleteProducts,
+  // searchProducts,
 };
