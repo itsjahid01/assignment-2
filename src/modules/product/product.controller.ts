@@ -24,7 +24,7 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// get product by searchTerm or get All Products-------------------
+// get all products
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const result = await productServices.getAllProducts();
@@ -110,31 +110,44 @@ const deleteProducts = async (req: Request, res: Response) => {
   }
 };
 
-// // search a Product-------------------
-// const searchProducts = async (req: Request, res: Response) => {
-//   try {
-//     const searchTerm = req.query.searchTerm;
-//     const result = await productServices.searchProducts(searchTerm as string);
+// get product by searchTerm or get All Products-------------------
+const searchTermOrGetAllProducts = async (req: Request, res: Response) => {
+  const { searchTerm } = req.query;
 
-//     res.status(200).send({
-//       success: true,
-//       message: `Products matching search term ${searchTerm} fetched successfully!`,
-//       data: null,
-//     });
-//   } catch (error: any) {
-//     res.status(400).send({
-//       success: false,
-//       message: error.message || "Something went wrong",
-//       error: error,
-//     });
-//   }
-// };
+  if (searchTerm) {
+    try {
+      //get orders by user email
+      const products = await productServices.searchProducts(
+        searchTerm as string
+      );
+      if (products.length === 0) {
+        res.status(400).send({
+          success: false,
+          message: `Products not found matching ${searchTerm}`,
+        });
+      }
+
+      res.status(200).send({
+        success: true,
+        message: `Products matching search term ${searchTerm} fetched successfully!`,
+        data: products,
+      });
+    } catch (error: any) {
+      res.status(404).send({
+        success: false,
+        message: "Something went wrong",
+        error: error.message,
+      });
+    }
+  } else {
+    getAllProducts(req, res);
+  }
+};
 
 export const productController = {
   createProduct,
-  getAllProducts,
+  searchTermOrGetAllProducts,
   getProductById,
   updateProduct,
   deleteProducts,
-  // searchProducts,
 };
