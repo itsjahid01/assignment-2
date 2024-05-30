@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { orderValidationSchema } from "./order.validation";
 import { orderServices } from "./order.service";
 import { productModel } from "../product/product.model";
-import { TProduct } from "../product/product.interface";
 
-// Create a New Order
+// Create a New Order -------------------------
 const createOrder = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
@@ -32,7 +31,7 @@ const createOrder = async (req: Request, res: Response) => {
       });
     }
 
-    // update  product quantity and inStock
+    // update  product quantity and inStock status
     product?.inventory.quantity -= quantity;
     product?.inventory.inStock = product?.inventory.quantity > 0;
     await product.save();
@@ -54,10 +53,57 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Create a New Order
-const getAllOrder = () => {};
+const getAllOrder = async (req: Request, res: Response) => {
+  try {
+    // get all Orders
+    const result = await orderServices.getAllOrder();
+    res.status(200).send({
+      success: true,
+      message: "Orders fetched successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(404).send({
+      success: false,
+      message: "Order not found",
+      error: error.message,
+    });
+  }
+};
+
+// get all Order or get order by email---------------
+const searchOrGetAllOrder = async (req: Request, res: Response) => {
+  const userEmail = req.query.email as string;
+
+  if (userEmail) {
+    try {
+      //get orders by user email
+      const userOrder = await orderServices.getOrdersByEmail(userEmail);
+      if (userOrder?.length === 0) {
+        res.status(400).send({
+          success: false,
+          message: `Orders not found matching email ${userEmail}`,
+        });
+      }
+
+      res.status(200).send({
+        success: true,
+        message: `Orders fetched successfully for user ${userEmail}!`,
+        data: userOrder,
+      });
+    } catch (error: any) {
+      res.status(404).send({
+        success: false,
+        message: "Order not found",
+        error: error.message,
+      });
+    }
+  } else {
+    getAllOrder(req, res);
+  }
+};
 
 export const orderController = {
   createOrder,
-  getAllOrder,
+  searchOrGetAllOrder,
 };

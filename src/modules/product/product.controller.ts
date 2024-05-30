@@ -24,7 +24,7 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// searchTerm or getAllProduct-------------------
+// get product by searchTerm or get All Products-------------------
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const result = await productServices.getAllProducts();

@@ -6,9 +6,21 @@ const createOrder = async (orderData: TOrder) => {
   return result;
   // return console.log(orderData);
 };
-const getAllOrder = () => {};
+
+// get all Order
+const getAllOrder = async () => {
+  const orders = await orderModel.find();
+  return orders;
+};
+
+//  get orders by email
+const getOrdersByEmail = async (userEmail: string) => {
+  const userOrders = await orderModel.find({ email: userEmail });
+  return userOrders;
+};
 
 export const orderServices = {
   createOrder,
   getAllOrder,
+  getOrdersByEmail,
 };
