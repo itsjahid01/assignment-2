@@ -1,4 +1,3 @@
-import { object } from "zod";
 import { TProduct } from "./product.interface";
 import { productModel } from "./product.model";
 
@@ -12,19 +11,19 @@ const getAllProducts = async () => {
   return result;
 };
 
-const getAProduct = async (id: any) => {
+const getAProduct = async (id: string) => {
   const result = await productModel.findById(id);
   return result;
 };
 
-const updateProductById = async (id: any, product: TProduct) => {
+const updateProductById = async (id: string, product: TProduct) => {
   const result = await productModel.findByIdAndUpdate(id, product, {
     new: true,
   });
   return result;
 };
 
-const deleteProduct = async (id: any) => {
+const deleteProduct = async (id: string) => {
   const result = await productModel.findByIdAndDelete(id);
   return result;
 };
